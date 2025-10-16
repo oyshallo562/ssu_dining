@@ -3,8 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>숭실대학교 학식 메뉴</title>
+  <title>숭실대학교 학식 메뉴 (Apple Design)</title>
   <style>
+    /* 1. CSS Variables (Apple-inspired Design System) */
+    :root {
+      --bg-color: #f5f5f7;
+      --card-bg-color: #ffffff;
+      --text-primary: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --border-color: #d2d2d7;
+      --pill-bg-color: #e8e8ea;
+      --rating-color: #ffb400;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --card-border-radius: 16px;
+    }
+
+    /* 2. Global Styles */
     * {
       margin: 0;
       padding: 0;
@@ -12,68 +26,85 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 20px;
+      font-family: var(--font-family);
+      background-color: var(--bg-color);
+      color: var(--text-primary);
     }
 
+    /* 3. Layout */
     .container {
-      max-width: 1200px;
+      max-width: 1100px;
       margin: 0 auto;
+      padding: 0 20px;
     }
 
     header {
+      background: rgba(245, 245, 247, 0.7);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 24px 0 16px 0;
       text-align: center;
-      color: white;
-      margin-bottom: 30px;
+      margin-bottom: 32px;
     }
 
     h1 {
       font-size: 2.5rem;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h1 svg {
+      width: 36px;
+      height: 36px;
     }
 
     .date-info {
-      font-size: 1.2rem;
-      opacity: 0.9;
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-top: 8px;
     }
 
     .restaurant-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 25px;
-      margin-top: 30px;
     }
 
+    /* 4. Components */
     .restaurant-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      background: var(--card-bg-color);
+      border-radius: var(--card-border-radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       overflow: hidden;
-      transition: transform 0.3s ease;
+      transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     }
 
     .restaurant-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
     .restaurant-header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
       padding: 20px;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .restaurant-name {
       font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 5px;
+      font-weight: 600;
     }
 
     .restaurant-location {
       font-size: 0.9rem;
-      opacity: 0.9;
+      color: var(--text-secondary);
+      margin-top: 4px;
     }
 
     .restaurant-body {
@@ -81,198 +112,142 @@
     }
 
     .menu-section {
-      margin-bottom: 20px;
       padding-bottom: 20px;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #f0f0f2;
     }
-
     .menu-section:last-child {
       border-bottom: none;
       margin-bottom: 0;
+      padding-bottom: 0;
     }
 
     .corner-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
     }
 
     .corner-name {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #667eea;
-    }
-
-    .meal-badge {
-      background: #f0f0f0;
-      padding: 4px 12px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      color: #666;
-    }
-
-    .meal-badge.breakfast {
-      background: #fff3cd;
-      color: #856404;
-    }
-
-    .meal-badge.lunch {
-      background: #d4edda;
-      color: #155724;
-    }
-
-    .meal-badge.dinner {
-      background: #cce5ff;
-      color: #004085;
-    }
-
-    .menu-item {
-      margin-bottom: 12px;
+      font-size: 1.2rem;
+      font-weight: 600;
     }
 
     .main-menu {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 12px;
     }
 
-    .menu-name {
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: #333;
-      flex: 1;
-    }
-
-    .menu-name-en {
-      font-size: 0.85rem;
-      color: #888;
-      margin-top: 4px;
-      font-style: italic;
-    }
+    .menu-details { flex: 1; }
+    .menu-name { font-size: 1.05rem; }
+    .menu-name-en { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
 
     .rating {
       display: flex;
       align-items: center;
-      margin-left: 10px;
+      gap: 4px;
+      color: var(--text-primary);
+      font-weight: 600;
       white-space: nowrap;
     }
 
-    .star {
-      color: #ffc107;
-      margin-right: 4px;
-    }
+    .star { color: var(--rating-color); }
 
-    .rating-value {
-      font-weight: bold;
-      color: #667eea;
-    }
-
-    .side-items {
+    .side-items-container {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 8px;
     }
 
-    .side-item {
-      background: #f8f9fa;
+    .pill {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 500;
       padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      color: #666;
+      border-radius: 20px;
+      background-color: var(--pill-bg-color);
+      color: var(--text-secondary);
     }
+    .pill.meal-badge {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .pill.breakfast { background-color: #fff0d1; }
+    .pill.lunch { background-color: #d7f5e3; }
+    .pill.dinner { background-color: #d4e8ff; }
 
-    .no-menu {
+
+    /* 5. Status Messages */
+    .status-container {
       text-align: center;
-      padding: 40px 20px;
-      color: #999;
+      padding: 60px 20px;
+      color: var(--text-secondary);
       font-size: 1.1rem;
     }
 
-    .loading {
-      text-align: center;
-      padding: 40px;
-      color: white;
-      font-size: 1.2rem;
-    }
-
-    .error {
-      background: #f8d7da;
-      color: #721c24;
-      padding: 15px;
-      border-radius: 10px;
-      margin: 20px;
-      text-align: center;
-    }
-
     @media (max-width: 768px) {
-      h1 {
-        font-size: 2rem;
-      }
-
-      .restaurant-grid {
-        grid-template-columns: 1fr;
-      }
+      h1 { font-size: 2rem; }
+      .restaurant-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <h1>🍽️ 숭실대학교 학식 메뉴</h1>
-    <div class="date-info" id="dateInfo">로딩 중...</div>
+    <h1>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15.59V16h-1.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5H11v-1.09c0-.28.22-.5.5-.5s.5.22.5.5V15h1.5c.28 0 .5.22.5.5s-.22.5-.5.5H12v1.59c0 .28-.22.5-.5.5s-.5-.22-.5-.5zM12 12c-1.38 0-2.5-1.12-2.5-2.5S10.62 7 12 7s2.5 1.12 2.5 2.5S13.38 12 12 12z"/>
+        <path d="M21.5 12.5c-.28 0-.5-.22-.5-.5v-1.5H19.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h1.5V8.41c0-.28.22-.5.5-.5s.5.22.5.5v1.59h1.5c.28 0 .5.22.5.5s-.22.5-.5.5h-1.5v1.5c0 .28-.22.5-.5.5zM4.5 11.5c.28 0 .5.22.5.5v1.5h1.5c.28 0 .5.22.5.5s-.22.5-.5.5H5v1.59c0 .28-.22.5-.5.5s-.5-.22-.5-.5V15H2.5c-.28 0-.5-.22-.5-.5s.22-.5.5-.5h1.5v-1.5c0-.28.22-.5.5-.5z"/>
+      </svg>
+      숭실대학교 학식 메뉴
+    </h1>
+    <div class="date-info" id="dateInfo"></div>
   </header>
 
-  <div id="loadingMessage" class="loading">메뉴 정보를 불러오는 중...</div>
+  <div id="statusContainer" class="status-container">
+    <div id="statusMessage">메뉴 정보를 불러오는 중...</div>
+  </div>
+
   <div id="restaurantGrid" class="restaurant-grid" style="display: none;"></div>
-  <div id="errorMessage" class="error" style="display: none;"></div>
 </div>
 
 <script>
-  // menus.json 파일 로드
   async function loadMenus() {
+    const statusContainer = document.getElementById('statusContainer');
+    const statusMessage = document.getElementById('statusMessage');
+    const grid = document.getElementById('restaurantGrid');
+
     try {
-      // 같은 디렉토리의 menus.json 파일 읽기
       const response = await fetch('./menus.json');
-
       if (!response.ok) {
-        throw new Error('메뉴 파일을 불러올 수 없습니다.');
+        throw new Error(`메뉴 파일을 불러올 수 없습니다 (HTTP ${response.status})`);
       }
-
       const data = await response.json();
+
+      statusContainer.style.display = 'none';
+      grid.style.display = 'grid';
       displayMenus(data);
 
     } catch (error) {
       console.error('Error loading menus:', error);
-      document.getElementById('loadingMessage').style.display = 'none';
-      document.getElementById('errorMessage').textContent =
-              '메뉴 정보를 불러오는데 실패했습니다. menus.json 파일이 같은 폴더에 있는지 확인해주세요.';
-      document.getElementById('errorMessage').style.display = 'block';
+      statusMessage.textContent = '메뉴 정보를 불러오는 데 실패했습니다. 파일 경로와 형식을 확인해주세요.';
     }
   }
 
   function displayMenus(data) {
-    // 날짜 정보 표시
     const dateInfo = document.getElementById('dateInfo');
     const date = new Date(data.date);
     const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
     dateInfo.textContent = date.toLocaleDateString('ko-KR', options);
 
-    // 로딩 메시지 숨기기
-    document.getElementById('loadingMessage').style.display = 'none';
-
-    // 레스토랑 그리드 표시
     const grid = document.getElementById('restaurantGrid');
-    grid.style.display = 'grid';
+    grid.innerHTML = '';
 
-    // 각 식당 카드 생성
-    const places = data.places;
-
-    for (const [key, place] of Object.entries(places)) {
-      const card = createRestaurantCard(place);
-      grid.appendChild(card);
+    for (const place of Object.values(data.places)) {
+      grid.appendChild(createRestaurantCard(place));
     }
   }
 
@@ -280,113 +255,62 @@
     const card = document.createElement('div');
     card.className = 'restaurant-card';
 
-    const header = document.createElement('div');
-    header.className = 'restaurant-header';
-    header.innerHTML = `
-                <div class="restaurant-name">${place.name}</div>
-                <div class="restaurant-location">${place.building} ${place.location_detail}</div>
-            `;
-
-    const body = document.createElement('div');
-    body.className = 'restaurant-body';
-
+    let bodyContent = '';
     if (place.menus.length === 0) {
-      body.innerHTML = '<div class="no-menu">오늘은 운영하지 않습니다</div>';
+      bodyContent = '<div class="status-container">오늘은 운영하지 않습니다.</div>';
     } else {
-      place.menus.forEach(menu => {
-        const section = createMenuSection(menu);
-        body.appendChild(section);
-      });
+      bodyContent = place.menus.map(createMenuSection).join('');
     }
 
-    card.appendChild(header);
-    card.appendChild(body);
-
+    card.innerHTML = `
+      <div class="restaurant-header">
+        <div class="restaurant-name">${place.name}</div>
+        <div class="restaurant-location">${place.building} ${place.location_detail}</div>
+      </div>
+      <div class="restaurant-body">
+        ${bodyContent}
+      </div>
+    `;
     return card;
   }
 
   function createMenuSection(menu) {
-    const section = document.createElement('div');
-    section.className = 'menu-section';
-
-    // 식사 시간대 배지 클래스 결정
-    let mealClass = 'lunch';
+    let mealClass = '';
     if (menu.meal === '조식') mealClass = 'breakfast';
     else if (menu.meal === '석식') mealClass = 'dinner';
+    else mealClass = 'lunch';
 
-    const cornerHeader = document.createElement('div');
-    cornerHeader.className = 'corner-header';
-    cornerHeader.innerHTML = `
-                <div class="corner-name">${menu.corner}</div>
-                <div class="meal-badge ${mealClass}">${menu.meal}</div>
-            `;
-    section.appendChild(cornerHeader);
+    const mainMenuItem = menu.items[0] || { name: '메뉴 정보 없음' };
 
-    // 메뉴 아이템들
-    menu.items.forEach((item, index) => {
-      const menuItem = document.createElement('div');
-      menuItem.className = 'menu-item';
+    const sideItems = menu.items.slice(1).map(item =>
+            `<span class="pill">${item.name}</span>`
+    ).join('');
 
-      if (index === 0) {
-        // 첫 번째 아이템 (메인 메뉴)
-        const mainMenu = document.createElement('div');
-        mainMenu.className = 'main-menu';
+    const ratingHtml = mainMenuItem.rating ? `
+      <div class="rating">
+        <span class="star">★</span>
+        <span>${mainMenuItem.rating}</span>
+      </div>
+    ` : '';
 
-        const nameDiv = document.createElement('div');
-        nameDiv.style.flex = '1';
-
-        const nameSpan = document.createElement('div');
-        nameSpan.className = 'menu-name';
-        nameSpan.textContent = item.name;
-        nameDiv.appendChild(nameSpan);
-
-        if (item.name_en) {
-          const nameEnSpan = document.createElement('div');
-          nameEnSpan.className = 'menu-name-en';
-          nameEnSpan.textContent = item.name_en;
-          nameDiv.appendChild(nameEnSpan);
-        }
-
-        mainMenu.appendChild(nameDiv);
-
-        if (item.rating) {
-          const ratingDiv = document.createElement('div');
-          ratingDiv.className = 'rating';
-          ratingDiv.innerHTML = `
-                            <span class="star">⭐</span>
-                            <span class="rating-value">${item.rating}</span>
-                        `;
-          mainMenu.appendChild(ratingDiv);
-        }
-
-        menuItem.appendChild(mainMenu);
-      } else {
-        // 사이드 메뉴들을 한 줄로 표시
-        if (index === 1) {
-          const sideItems = document.createElement('div');
-          sideItems.className = 'side-items';
-
-          // 나머지 모든 아이템 추가
-          for (let i = 1; i < menu.items.length; i++) {
-            const sideItem = document.createElement('div');
-            sideItem.className = 'side-item';
-            sideItem.textContent = menu.items[i].name;
-            sideItems.appendChild(sideItem);
-          }
-
-          menuItem.appendChild(sideItems);
-        } else {
-          return; // 이미 사이드 메뉴를 모두 추가했으므로 건너뛰기
-        }
-      }
-
-      section.appendChild(menuItem);
-    });
-
-    return section;
+    return `
+      <div class="menu-section">
+        <div class="corner-header">
+          <div class="corner-name">${menu.corner}</div>
+          <div class="pill meal-badge ${mealClass}">${menu.meal}</div>
+        </div>
+        <div class="main-menu">
+          <div class="menu-details">
+            <div class="menu-name">${mainMenuItem.name}</div>
+            ${mainMenuItem.name_en ? `<div class="menu-name-en">${mainMenuItem.name_en}</div>` : ''}
+          </div>
+          ${ratingHtml}
+        </div>
+        ${sideItems ? `<div class="side-items-container">${sideItems}</div>` : ''}
+      </div>
+    `;
   }
 
-  // 페이지 로드 시 메뉴 로드
   window.addEventListener('DOMContentLoaded', loadMenus);
 </script>
 </body>

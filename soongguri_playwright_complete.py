@@ -15,7 +15,7 @@ TARGETS = [
 ]
 
 MOBILE_URL = "https://soongguri.com/m/"
-OUT_PATH = Path(__file__).resolve().parent / "data" / "menus.json"
+OUT_PATH = Path(__file__).resolve().parent / "menus.json"
 
 def _now_kr_iso():
     KST = tz.gettz("Asia/Seoul")

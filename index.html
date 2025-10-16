@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>숭실대학교 학식 메뉴</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .date-info {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .restaurant-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .restaurant-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      overflow: hidden;
+      transition: transform 0.3s ease;
+    }
+
+    .restaurant-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .restaurant-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+    }
+
+    .restaurant-name {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .restaurant-location {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .restaurant-body {
+      padding: 20px;
+    }
+
+    .menu-section {
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .menu-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .corner-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .corner-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .meal-badge {
+      background: #f0f0f0;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .meal-badge.breakfast {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .meal-badge.lunch {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .meal-badge.dinner {
+      background: #cce5ff;
+      color: #004085;
+    }
+
+    .menu-item {
+      margin-bottom: 12px;
+    }
+
+    .main-menu {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .menu-name {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #333;
+      flex: 1;
+    }
+
+    .menu-name-en {
+      font-size: 0.85rem;
+      color: #888;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      margin-left: 10px;
+      white-space: nowrap;
+    }
+
+    .star {
+      color: #ffc107;
+      margin-right: 4px;
+    }
+
+    .rating-value {
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .side-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .side-item {
+      background: #f8f9fa;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    .no-menu {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 1.1rem;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      .restaurant-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🍽️ 숭실대학교 학식 메뉴</h1>
+    <div class="date-info" id="dateInfo">로딩 중...</div>
+  </header>
+
+  <div id="loadingMessage" class="loading">메뉴 정보를 불러오는 중...</div>
+  <div id="restaurantGrid" class="restaurant-grid" style="display: none;"></div>
+  <div id="errorMessage" class="error" style="display: none;"></div>
+</div>
+
+<script>
+  // menus.json 파일 로드
+  async function loadMenus() {
+    try {
+      // 같은 디렉토리의 menus.json 파일 읽기
+      const response = await fetch('./menus.json');
+
+      if (!response.ok) {
+        throw new Error('메뉴 파일을 불러올 수 없습니다.');
+      }
+
+      const data = await response.json();
+      displayMenus(data);
+
+    } catch (error) {
+      console.error('Error loading menus:', error);
+      document.getElementById('loadingMessage').style.display = 'none';
+      document.getElementById('errorMessage').textContent =
+              '메뉴 정보를 불러오는데 실패했습니다. menus.json 파일이 같은 폴더에 있는지 확인해주세요.';
+      document.getElementById('errorMessage').style.display = 'block';
+    }
+  }
+
+  function displayMenus(data) {
+    // 날짜 정보 표시
+    const dateInfo = document.getElementById('dateInfo');
+    const date = new Date(data.date);
+    const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+    dateInfo.textContent = date.toLocaleDateString('ko-KR', options);
+
+    // 로딩 메시지 숨기기
+    document.getElementById('loadingMessage').style.display = 'none';
+
+    // 레스토랑 그리드 표시
+    const grid = document.getElementById('restaurantGrid');
+    grid.style.display = 'grid';
+
+    // 각 식당 카드 생성
+    const places = data.places;
+
+    for (const [key, place] of Object.entries(places)) {
+      const card = createRestaurantCard(place);
+      grid.appendChild(card);
+    }
+  }
+
+  function createRestaurantCard(place) {
+    const card = document.createElement('div');
+    card.className = 'restaurant-card';
+
+    const header = document.createElement('div');
+    header.className = 'restaurant-header';
+    header.innerHTML = `
+                <div class="restaurant-name">${place.name}</div>
+                <div class="restaurant-location">${place.building} ${place.location_detail}</div>
+            `;
+
+    const body = document.createElement('div');
+    body.className = 'restaurant-body';
+
+    if (place.menus.length === 0) {
+      body.innerHTML = '<div class="no-menu">오늘은 운영하지 않습니다</div>';
+    } else {
+      place.menus.forEach(menu => {
+        const section = createMenuSection(menu);
+        body.appendChild(section);
+      });
+    }
+
+    card.appendChild(header);
+    card.appendChild(body);
+
+    return card;
+  }
+
+  function createMenuSection(menu) {
+    const section = document.createElement('div');
+    section.className = 'menu-section';
+
+    // 식사 시간대 배지 클래스 결정
+    let mealClass = 'lunch';
+    if (menu.meal === '조식') mealClass = 'breakfast';
+    else if (menu.meal === '석식') mealClass = 'dinner';
+
+    const cornerHeader = document.createElement('div');
+    cornerHeader.className = 'corner-header';
+    cornerHeader.innerHTML = `
+                <div class="corner-name">${menu.corner}</div>
+                <div class="meal-badge ${mealClass}">${menu.meal}</div>
+            `;
+    section.appendChild(cornerHeader);
+
+    // 메뉴 아이템들
+    menu.items.forEach((item, index) => {
+      const menuItem = document.createElement('div');
+      menuItem.className = 'menu-item';
+
+      if (index === 0) {
+        // 첫 번째 아이템 (메인 메뉴)
+        const mainMenu = document.createElement('div');
+        mainMenu.className = 'main-menu';
+
+        const nameDiv = document.createElement('div');
+        nameDiv.style.flex = '1';
+
+        const nameSpan = document.createElement('div');
+        nameSpan.className = 'menu-name';
+        nameSpan.textContent = item.name;
+        nameDiv.appendChild(nameSpan);
+
+        if (item.name_en) {
+          const nameEnSpan = document.createElement('div');
+          nameEnSpan.className = 'menu-name-en';
+          nameEnSpan.textContent = item.name_en;
+          nameDiv.appendChild(nameEnSpan);
+        }
+
+        mainMenu.appendChild(nameDiv);
+
+        if (item.rating) {
+          const ratingDiv = document.createElement('div');
+          ratingDiv.className = 'rating';
+          ratingDiv.innerHTML = `
+                            <span class="star">⭐</span>
+                            <span class="rating-value">${item.rating}</span>
+                        `;
+          mainMenu.appendChild(ratingDiv);
+        }
+
+        menuItem.appendChild(mainMenu);
+      } else {
+        // 사이드 메뉴들을 한 줄로 표시
+        if (index === 1) {
+          const sideItems = document.createElement('div');
+          sideItems.className = 'side-items';
+
+          // 나머지 모든 아이템 추가
+          for (let i = 1; i < menu.items.length; i++) {
+            const sideItem = document.createElement('div');
+            sideItem.className = 'side-item';
+            sideItem.textContent = menu.items[i].name;
+            sideItems.appendChild(sideItem);
+          }
+
+          menuItem.appendChild(sideItems);
+        } else {
+          return; // 이미 사이드 메뉴를 모두 추가했으므로 건너뛰기
+        }
+      }
+
+      section.appendChild(menuItem);
+    });
+
+    return section;
+  }
+
+  // 페이지 로드 시 메뉴 로드
+  window.addEventListener('DOMContentLoaded', loadMenus);
+</script>
+</body>
+</html>

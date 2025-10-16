@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SSU 학식 모아보기 (학생회관·도담·푸드코트)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800">
+  <div id="root" class="max-w-3xl mx-auto p-4 md:p-6"></div>
+
+  <script type="text/javascript">
+    const e = React.createElement;
+
+    // --- 메뉴 아이템 컴포넌트 ---
+    // 메뉴 이름과 가격을 좌우로 정렬하여 보여줍니다.
+    function MenuItem({ item }) {
+      return e('div', { className: 'flex justify-between items-center text-sm py-1' }, [
+        e('span', { key: 'name', className: 'text-slate-700' }, item.name),
+        e('span', { key: 'price', className: 'font-medium text-slate-600' }, item.price || '')
+      ]);
+    }
+
+    // --- 식당 카드 컴포넌트 ---
+    function PlaceCard({ placeKey, place }) {
+      // 메뉴 데이터를 '아침', '중식', '석식' 등 식사 시간(meal)에 따라 그룹화합니다.
+      const groupedMenus = (place.menus || []).reduce((acc, menu) => {
+        const mealType = menu.meal || '기타';
+        if (!acc[mealType]) {
+          acc[mealType] = [];
+        }
+        acc[mealType].push(menu);
+        return acc;
+      }, {});
+
+      return e('div', { className: 'rounded-2xl shadow-sm bg-white p-5 border border-slate-200/80 transition-shadow hover:shadow-md' }, [
+        // 카드 헤더 (식당 이름, 위치)
+        e('div', { key: 'h', className: 'flex items-center justify-between mb-4 pb-3 border-b' }, [
+          e('h2', { className: 'text-xl font-bold' }, place.name || placeKey),
+          e('span', { className: 'text-xs font-medium bg-slate-100 text-slate-500 px-2 py-1 rounded-full' }, place.building || '')
+        ]),
+
+        // 메뉴 목록 또는 "메뉴 없음" 표시
+        (place.menus && place.menus.length)
+          ? e('div', { key: 'menus', className: 'space-y-5' },
+              Object.entries(groupedMenus).map(([meal, menus], idx) => (
+                e('div', { key: idx }, [
+                  e('h3', { className: 'text-sm font-bold text-blue-600 mb-2' }, meal),
+                  e('div', { className: 'space-y-3' }, menus.map((menu, menuIdx) => (
+                    e('div', { key: menuIdx }, [
+                      e('p', { className: 'text-sm font-semibold text-slate-800 mb-1' }, menu.corner),
+                      e('div', { className: 'space-y-0' }, menu.items.map((item, itemIdx) => (
+                        e(MenuItem, { key: itemIdx, item: item })
+                      )))
+                    ])
+                  )))
+                ])
+              ))
+            )
+          : e('div', { key: 'empty', className: 'text-sm text-slate-400 text-center py-10' }, [
+              e('ion-icon', { name: 'fast-food-outline', style: { fontSize: '2rem', marginBottom: '0.5rem' } }),
+              e('p', {}, '오늘은 운영하지 않거나, 메뉴 정보가 없어요.')
+            ])
+      ]);
+    }
+
+    // --- 메인 앱 컴포넌트 ---
+    function App() {
+      const [data, setData] = React.useState(null);
+      const [loading, setLoading] = React.useState(true);
+      const [error, setError] = React.useState(null);
+
+      React.useEffect(() => {
+        // API URL은 실제 환경에 맞게 수정해주세요.
+        const API_URL = 'http://localhost:8000/api/today?places=students,dodam,foodcourt';
+        fetch(API_URL)
+          .then(res => {
+            if (!res.ok) throw new Error(`서버 응답 오류: ${res.status}`);
+            return res.json();
+          })
+          .then(setData)
+          .catch(err => setError(err))
+          .finally(() => setLoading(false));
+      }, []);
+
+      if (loading) return e('div', { className: 'p-8 text-center text-slate-500' }, '오늘의 학식 메뉴를 불러오는 중...');
+      if (error) return e('div', { className: 'p-8 text-center text-red-600 rounded-lg bg-red-50' }, '데이터를 불러오는데 실패했어요: ' + error.message);
+      if (!data) return null;
+
+      const places = data.places || {};
+
+      return e('div', { className: 'space-y-6' }, [
+        // 페이지 헤더
+        e('header', { key: 'hd', className: 'py-4' }, [
+          e('h1', { className: 'text-3xl font-bold tracking-tight' }, 'SSU 학식 모아보기'),
+          e('p', { className: 'text-sm text-slate-500 mt-1' }, `${data.date || '오늘'}의 식단 정보입니다.`)
+        ]),
+        // 식당 카드 그리드
+        e('main', { key: 'grid', className: 'grid gap-5 md:grid-cols-2' }, Object.entries(places).map(([k, v]) => (
+          e(PlaceCard, { key: k, placeKey: k, place: v })
+        )))
+      ]);
+    }
+
+    // React 앱 렌더링
+    ReactDOM.createRoot(document.getElementById('root')).render(e(App));
+  </script>
+</body>
+</html>

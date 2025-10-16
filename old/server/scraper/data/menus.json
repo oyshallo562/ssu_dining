@@ -1,0 +1,58 @@
+{
+  "generated_at": "2025-10-16T13:35:42+09:00",
+  "date": "2025-10-16",
+  "places": {
+    "students": {
+      "name": "학생식당",
+      "building": "학생회관",
+      "location_detail": "2층",
+      "menus": [
+        {
+          "meal": "중식",
+          "corner": "뚝배기코너",
+          "items": [
+            {
+              "name": "뚝배기설렁탕",
+              "name_en": "Beef Bone Soup in Hot Pot",
+              "rating": 5.0
+            }
+          ]
+        },
+        {
+          "meal": "중식",
+          "corner": "덮밥코너",
+          "items": [
+            {
+              "name": "돼지갈비양념맛덮밥",
+              "name_en": "Seasoned Pork Rib Rice Bowl",
+              "rating": 5.0
+            }
+          ]
+        },
+        {
+          "meal": "중식",
+          "corner": "양식코너",
+          "items": [
+            {
+              "name": "등심돈까스 & 삼겹살김치볶음밥",
+              "name_en": "Loin Pork Cutlet & Stir-fried Kimchi Rice with Pork Belly",
+              "rating": 5.0
+            }
+          ]
+        }
+      ]
+    },
+    "dodam": {
+      "name": "숭실도담식당",
+      "building": "숭실도담",
+      "location_detail": "생활관 1층",
+      "menus": []
+    },
+    "foodcourt": {
+      "name": "푸드코트",
+      "building": "신양관",
+      "location_detail": "1층",
+      "menus": []
+    }
+  }
+}

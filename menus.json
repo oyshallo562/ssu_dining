@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-10-16T13:41:47+09:00",
+  "generated_at": "2025-10-16T14:07:15+09:00",
   "date": "2025-10-16",
   "places": {
     "students": {
@@ -105,6 +105,9 @@
               "rating": 6.0
             },
             {
+              "name": ")"
+            },
+            {
               "name": "치커리상추무침"
             },
             {
@@ -124,6 +127,12 @@
       "name": "푸드코트",
       "building": "신양관",
       "location_detail": "1층",
+      "menus": []
+    },
+    "dorm": {
+      "name": "기숙사 식당",
+      "building": "레지던스 홀",
+      "location_detail": "B1층",
       "menus": []
     }
   }

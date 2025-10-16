@@ -13,7 +13,6 @@
       --text-secondary: #6e6e73;
       --border-color: #d2d2d7;
       --pill-bg-color: #e8e8ea;
-      --rating-color: #ffb400;
       --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       --card-border-radius: 16px;
     }
@@ -145,16 +144,14 @@
     .menu-name { font-size: 1.05rem; }
     .menu-name-en { font-size: 0.9rem; color: var(--text-secondary); margin-top: 4px; }
 
-    .rating {
+    .price {
       display: flex;
       align-items: center;
-      gap: 4px;
       color: var(--text-primary);
       font-weight: 600;
       white-space: nowrap;
+      font-size: 1.05rem;
     }
-
-    .star { color: var(--rating-color); }
 
     .side-items-container {
       display: flex;
@@ -286,10 +283,10 @@
             `<span class="pill">${item.name}</span>`
     ).join('');
 
-    const ratingHtml = mainMenuItem.rating ? `
-      <div class="rating">
-        <span class="star">★</span>
-        <span>${mainMenuItem.rating}</span>
+    // 'rating' 데이터를 가격으로 변환합니다 (예: 5 -> 5,000원)
+    const priceHtml = mainMenuItem.rating ? `
+      <div class="price">
+        <span>${(mainMenuItem.rating * 1000).toLocaleString('ko-KR')}원</span>
       </div>
     ` : '';
 
@@ -304,7 +301,7 @@
             <div class="menu-name">${mainMenuItem.name}</div>
             ${mainMenuItem.name_en ? `<div class="menu-name-en">${mainMenuItem.name_en}</div>` : ''}
           </div>
-          ${ratingHtml}
+          ${priceHtml}
         </div>
         ${sideItems ? `<div class="side-items-container">${sideItems}</div>` : ''}
       </div>
